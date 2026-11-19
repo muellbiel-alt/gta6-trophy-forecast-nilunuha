@@ -69,10 +69,16 @@ LAUNCH_REFRESH_PLAYERS = 3868
 LAUNCH_REFRESH_EARNED = 4276
 LAUNCH_DATE = "2026-11-19"
 
-# Spread (logit units) of the refresh-path forecast: the refresh is
-# counted, not guessed, so the band is narrow but honest about the
-# few earners the new cohort adds on top of the counted ones.
-SPREAD_REFRESH = 0.04
+# Spread (logit units) of the refresh-path forecast: the refresh totals
+# are counted, not guessed, but WHICH trophies the new cohort's earners
+# land on is a random draw around the counted total -- v1's 0.04 band
+# covered the truth only 25% of the time (dev loss 0.1765, miss 0.04pp).
+# A 400-draw Monte Carlo over proportional / uniform / sqrt / squared
+# allocation priors puts the pinball-optimal spread at 0.20 logit
+# (expected loss ~0.093 vs ~0.130 at 0.04), and it is flat across the
+# priors, so 0.20 is the honest band for a refresh the program has not
+# seen. The median stays count-consistent (largest-remainder on E_i).
+SPREAD_REFRESH = 0.20
 # Random-walk spread per sqrt-day added to the trend path's residual
 # spread (the house baseline uses 0.5; the trend fits earn the
 # tighter 0.30 here because they already carry the growth).
